@@ -4,26 +4,27 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 public class Card {
-    private int Color; // Spade = 0, Heart = 1, Diamond = 2, Club = 3
-    private int Value; //Card number like 10 or 5, a = 1, j = 11, q = 12, k = 13.
-    private String Img;
-    private ImageView Imgage;
-    private ImageView Back;
+    public int value; //the number of the image and starting index in deck array before shuffling
+    public String color; // red or black
+    public String Img;
+    public ImageView Image;
+    public ImageView Back;
 
     //Card Class
-    public Card(int color, int value) {
-        Color = color;
-        Value = value;
+    public Card( int value) {
+        this.value = value;
 
-        //String Maker
-        int num = (color * 13) + value; //13 * color skips the suits that it is not
-        String img = "file:src/image/card/" + num + ".png";
+        Img = "file:src/image/card/" + value + ".png";
+        Image = new ImageView(new Image(Img));
 
-        //Image View
-        Imgage = new ImageView(new Image(img));
+        if(value > 13 && value < 40)
+            this.color = "red";
+        else
+            this.color = "black";
+
+        this.value = value % 10; // ace = 1, jack = 11, queen = 12, king = 13.
         Back = new ImageView(new Image("file:src/image/card/b1fv.png"));
     }
-
 
     // Getters & Setters
 
