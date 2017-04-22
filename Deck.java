@@ -6,13 +6,16 @@ public class Deck {
     ArrayList<Card> discardPile = new ArrayList<>();
 
     public Deck(){
-
         for(int i = 1; i < 53; i++)
         {
             Card draw = new Card(i);
             drawPile.add(draw);
         }
         java.util.Collections.shuffle(drawPile);
+        for(int i = 0; i < 4; i++) {
+            this.discardPile.add(drawPile.get(i));
+            drawPile.remove(i);
+        }
     }
 
     public void draw(Player currentPlayer){
