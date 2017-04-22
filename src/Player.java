@@ -9,9 +9,10 @@ public class Player {
 
     public Player(){};
 
-    public void playCard(Card currentCard, Deck playingDeck){
+    public void playCard(Card currentCard, Deck playingDeck, Player you){
         playingDeck.discardPile.add(0, currentCard);
         hand.remove(0);
+        capture(playingDeck, you);
     }
 
     public void redraw(Deck playingDeck){
@@ -21,14 +22,6 @@ public class Player {
                 playingDeck.draw(this);
         }
 
-    }
-
-    public void collect(Deck playingDeck){
-        for(int i = 0; i < playingDeck.discardPile.size(); i++)
-        {
-            captured.add(playingDeck.discardPile.get(i));
-            playingDeck.discardPile.remove(i);
-        }
     }
 
     public void capture(Deck playingDeck, Player player){
@@ -46,8 +39,7 @@ public class Player {
                     player.score += 10;
                 }
             }
-            player.captured.addAll(playingDeck.discardPile);
-
+            
             while (playingDeck.discardPile.size() != 0) {
 
                 //10's, J's, Q's, K's, A's.
@@ -65,16 +57,16 @@ public class Player {
                     score += 2;
                 }
 
-                //removes card
+                //removes cards from discard and adds them to the captured cards
                 captured.add(playingDeck.discardPile.get(0));
                 playingDeck.discardPile.remove(0);
             }
 
         }
+        
+        //Do End Turn
     }
-
+    
+    
     public void score(){}
-
-    //score
-
 }
