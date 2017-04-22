@@ -5,66 +5,23 @@ import javafx.scene.image.ImageView;
 
 public class Card {
     public int value; //the number of the image and starting index in deck array before shuffling
-    public String color; // red or black
+    public int suite; // Spade = 0, Heart = 1, Diamond = 2, Club = 3
     public String Img;
     public ImageView Image;
     public ImageView Back;
 
     //Card Class
-    public Card( int value) {
+    public Card(int value) {
         this.value = value;
 
-        Img = "file:src/image/card/" + value + ".png";
-        Image = new ImageView(new Image(Img));
+        this.Img = "file:src/Cards/" + value + ".png";
+        this.Image = new ImageView(new Image(Img));
 
-        if(value > 13 && value < 40)
-            this.color = "red";
-        else
-            this.color = "black";
+        this.suite = ((value - 1) / 13); // Spade = 0, Heart = 1, Diamond = 2, Club = 3
+        this.value = value % 13; // ace = 1, jack = 11, queen = 12, king = 0.
 
-        this.value = value % 10; // ace = 1, jack = 11, queen = 12, king = 13.
-        Back = new ImageView(new Image("file:src/image/card/b1fv.png"));
+        Back = new ImageView(new Image("file:src/Cards/b1fv.png"));
     }
 
-    // Getters & Setters
 
-    public int getColor() {
-        return Color;
-    }
-
-    public void setColor(int color) {
-        Color = color;
-    }
-
-    public int getValue() {
-        return Value;
-    }
-
-    public void setValue(int value) {
-        Value = value;
-    }
-
-    public String getImg() {
-        return Img;
-    }
-
-    public void setImg(String img) {
-        Img = img;
-    }
-
-    public ImageView getImgage() {
-        return Imgage;
-    }
-
-    public void setImgage(ImageView imgage) {
-        Imgage = imgage;
-    }
-
-    public ImageView getBack() {
-        return Back;
-    }
-
-    public void setBack(ImageView back) {
-        Back = back;
-    }
 }
