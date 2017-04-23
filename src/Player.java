@@ -12,7 +12,6 @@ public class Player {
     public void playCard(Card currentCard, Deck playingDeck, Player you){
         playingDeck.discardPile.add(0, currentCard);
         hand.remove(0);
-        capture(playingDeck, you);
     }
 
     public void redraw(Deck playingDeck){
@@ -23,13 +22,14 @@ public class Player {
         }
 
     }
-
+/*
     public void capture(Deck playingDeck, Player player){
 
-        boolean Captured = playingDeck.discardPile.get(0).value == playingDeck.discardPile.get(1).value;
+        boolean Captured = (playingDeck.discardPile.get(0).value == playingDeck.discardPile.get(1).value || playingDeck.discardPile.get(0).value == 11);
 
         //runs anytime a player puts down a card to see if captured
         if (Captured) {
+            System.out.println("\n***GOTCHA!!!***\n");
             //Checks for Pişti
             if (playingDeck.discardPile.size() == 2 && playingDeck.discardPile.get(0) == playingDeck.discardPile.get(1)) {
                 player.score += 10;
@@ -66,7 +66,5 @@ public class Player {
         
         //Do End Turn
     }
-    
-    
-    public void score(){}
+    */
 }
