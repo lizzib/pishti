@@ -95,9 +95,16 @@ public class GUI extends Application {
     public void shift(Player player, Deck playingDeck, GridPane playerPane, GridPane deckPane, int index) {
         if (player.getClass() == Computer.class)
             playerPane.getChildren().remove(player.hand.get(index).Back);
-        if (player.hand.size() == 0) {
+        if (player.hand.size() == 0 && playingDeck.drawPile.size() >= 8) {
             player.redraw(playingDeck);
             cardBackImages(playerPane, player);
+        }
+        else if(playingDeck.drawPile.size() < 8 && player.hand.size() == 0){
+            //END STATE
+            System.out.print("\n\n\n\nEND STATE");
+            EndState(playingDeck, player);
+            deckPane.getChildren().remove(1);
+            return;
         }
         else
             playerPane.getChildren().remove(player.hand.get(index).Image);
@@ -113,29 +120,13 @@ public class GUI extends Application {
             playingDeck.discardPile.add(playingDeck.drawPile.get(0));
             playingDeck.drawPile.remove(0);
         }
-        if (playingDeck.discardPile.size() == 0)
-            System.out.println("THIS BITCH EMPTY");
-        if (playingDeck.drawPile.size() == 0)
-            System.out.println("THIS BITCH IS ALSO EMPTY");
         deckPane.add(playingDeck.discardPile.get(0).Image, 1, 0);
-    }
-
-    public GridPane updateText(GridPane text, Player player, String user) {
-        Label score = new Label(user + " Score:\t" + player.score);
-        Label captured = new Label(user + " Cards:\t" + player.captured.size());
-
-        text.add(score, 0, 0);
-        text.add(captured, 0, 1);
-        text.setVgap(5);
-
-        return text;
     }
 
     public void updateButtons(Player player, Computer computer, Deck playingDeck, GridPane playerPane, GridPane computerPane, GridPane deckPane) {
         if (player.hand.size() > 0)
             player.hand.get(0).Image.setOnMouseClicked(event -> {
                 shift(player, playingDeck, playerPane, deckPane, 0);
-                //captureMe(playingDeck, player);
                 int index = computer.doTurn(playingDeck);
                 shift(computer, playingDeck, computerPane, deckPane, index);
 
@@ -148,7 +139,6 @@ public class GUI extends Application {
         if (player.hand.size() > 1)
             player.hand.get(1).Image.setOnMouseClicked(event -> {
                 shift(player, playingDeck, playerPane, deckPane, player.hand.indexOf(player.hand.get(1)));
-                //captureMe(playingDeck, player);
                 int index = computer.doTurn(playingDeck);
                 shift(computer, playingDeck, computerPane, deckPane, index);
                 DEBUG(player,computer);
@@ -160,7 +150,6 @@ public class GUI extends Application {
         if (player.hand.size() > 2)
             player.hand.get(2).Image.setOnMouseClicked(event -> {
                 shift(player, playingDeck, playerPane, deckPane, player.hand.indexOf(player.hand.get(2)));
-                //captureMe(playingDeck, player);
                 int index = computer.doTurn(playingDeck);
                 shift(computer, playingDeck, computerPane, deckPane, index);
                 DEBUG(player,computer);
@@ -172,7 +161,6 @@ public class GUI extends Application {
         if (player.hand.size() > 3)
             player.hand.get(3).Image.setOnMouseClicked(event -> {
                 shift(player, playingDeck, playerPane, deckPane, player.hand.size() - 1);
-                //captureMe(playingDeck, player);
                 int index = computer.doTurn(playingDeck);
                 shift(computer, playingDeck, computerPane, deckPane, index);
                 DEBUG(player,computer);
@@ -212,7 +200,7 @@ public class GUI extends Application {
                 //runs anytime a player puts down a card to see if captured
                 if(playingDeck.discardPile.size() > 1) {
                     if (playingDeck.discardPile.get(0).value == playingDeck.discardPile.get(1).value || playingDeck.discardPile.get(0).value == 11) {
-                        System.out.println("***GOTCHA!!!***\n DEBUG: " + playingDeck.discardPile.size() + "\nDEBUG: " + (playingDeck.discardPile.get(0) == playingDeck.discardPile.get(1)));
+                        System.out.println("\n***GOTCHA!!!***\nDEBUG: " + playingDeck.discardPile.size() + "\nDEBUG: " + (playingDeck.discardPile.get(0) == playingDeck.discardPile.get(1)));
                         //Checks for Pişti
                         if (playingDeck.discardPile.size() == 2 && playingDeck.discardPile.get(0).value == playingDeck.discardPile.get(1).value) {
                             player.score += 10;
@@ -251,6 +239,38 @@ public class GUI extends Application {
                 //Do End Turn
             }
 
+    public void EndState(Deck playingDeck, Player player){
+        // calculates score at end
+        int size = player.captured.size();
 
+        for(int i = 0; i < playingDeck.drawPile.size();i++)
+            player.captured.add(playingDeck.drawPile.get(i));
 
-    }
+        for(int i = 0; i < playingDeck.drawPile.size();i++)
+            player.captured.add(playingDeck.discardPile.get(i));
+
+        for(int i = 0; i < playingDeck.drawPile.size();i++)
+            player.captured.add(player.hand.get(i));
+
+                while (size != 0) {
+
+                    //10's, J's, Q's, K's, A's.
+                    if (player.captured.get(size).value > 2 || player.captured.get(size).value <= 10) {
+                        player.score += 1;
+                    }
+
+                    //diamond 10
+                    if (player.captured.get(size).value == 10 && player.captured.get(size).suite == 2) {
+                        player.score += 2;
+                    }
+
+                    //2 of clubs
+                    if (player.captured.get(size).value == 2 && player.captured.get(size).suite == 3) {
+                        player.score += 2;
+                    }
+
+                    size--;
+                }
+            }
+        }
+        //Do End Turn
