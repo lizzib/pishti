@@ -2,20 +2,16 @@ import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.layout.*;
-import javafx.scene.text.Text;
+
 import javafx.stage.Stage;
 import javafx.scene.paint.ImagePattern;
-
-import java.util.ArrayList;
 
 //Kaleb Eads
 
 public class GUI extends Application {
-    public GridPane PlayerText;
-    public GridPane CPUText;
+    boolean finaldraw = false;
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -72,7 +68,7 @@ public class GUI extends Application {
 
         if (player.getClass() == Computer.class) {
             for (int i = 0; i < player.hand.size(); i++) {
-                pane.add(player.hand.get(i).Image, i, 0);
+                pane.add(player.hand.get(i).Back, i, 0);
             }
         } else {
             for (int i = 0; i < player.hand.size(); i++) {
@@ -88,19 +84,26 @@ public class GUI extends Application {
     public void shift(Player player, Deck playingDeck, GridPane playerPane, GridPane deckPane, int index) {
         if (player.getClass() == Computer.class)
             playerPane.getChildren().remove(player.hand.get(index).Back);
-        if (player.hand.size() == 0 && playingDeck.drawPile.size() >= 8) {
+
+        if (player.hand.size() == 0 && playingDeck.drawPile.size()/8 >= 1 && finaldraw == false) {
             player.redraw(playingDeck);
             cardBackImages(playerPane, player);
+            if (playingDeck.drawPile.size()/4 >= 1 && playingDeck.drawPile.size()/4 == 1){
+                finaldraw = true;
+            }
         }
-        else if(playingDeck.drawPile.size() < 8 && player.hand.size() == 0){
-            //END STATE
-            System.out.print("\n\n\n\nEND STATE");
-            EndState(playingDeck, player);
-            deckPane.getChildren().remove(1);
+        else if (finaldraw == true){
+            playerPane.getChildren().remove(player.hand.get(index).Image);
             return;
         }
         else
             playerPane.getChildren().remove(player.hand.get(index).Image);
+
+        if (playingDeck.drawPile.size()/4 >= 1 && playingDeck.drawPile.size()/4 == 1 && finaldraw == false) {
+            finaldraw = true;
+            player.redraw(playingDeck);
+            cardBackImages(playerPane, player);
+        }
 
         playingDeck.discardPile.add(0, player.hand.get(index));
         player.hand.remove(index);
@@ -114,14 +117,26 @@ public class GUI extends Application {
             playingDeck.drawPile.remove(0);
         }
         deckPane.add(playingDeck.discardPile.get(0).Image, 1, 0);
+
+        if(finaldraw == true){
+            EndState(playingDeck, player);
+            playerPane.getChildren().clear();
+            deckPane.getChildren().clear();
+            System.out.println(playingDeck.drawPile.size() + " AHHHHHHHHHHHHHHHHHHHHHH");
+            return;
+        }
     }
 
     public void updateButtons(Player player, Computer computer, Deck playingDeck, GridPane playerPane, GridPane computerPane, GridPane deckPane) {
         if (player.hand.size() > 0)
             player.hand.get(0).Image.setOnMouseClicked(event -> {
                 shift(player, playingDeck, playerPane, deckPane, 0);
+                if (finaldraw == true)
+                    EndState(playingDeck, player);
                 int index = computer.doTurn(playingDeck);
                 shift(computer, playingDeck, computerPane, deckPane, index);
+                if (finaldraw == true)
+                    EndState(playingDeck, computer);
 
                 DEBUG(player,computer);
                 System.out.print("\nDEBUG: DECK NUMBER OF CARDS: " + playingDeck.discardPile.size());
@@ -132,8 +147,14 @@ public class GUI extends Application {
         if (player.hand.size() > 1)
             player.hand.get(1).Image.setOnMouseClicked(event -> {
                 shift(player, playingDeck, playerPane, deckPane, player.hand.indexOf(player.hand.get(1)));
+                if (finaldraw == true)
+                    EndState(playingDeck, player);
                 int index = computer.doTurn(playingDeck);
                 shift(computer, playingDeck, computerPane, deckPane, index);
+                if (finaldraw == true)
+                    EndState(playingDeck, computer);
+
+
                 DEBUG(player,computer);
                 System.out.print("\nDEBUG: DECK NUMBER OF CARDS: " + playingDeck.discardPile.size());
                 String[] suite = {"Spade", "Heart", "Diamond", "Club"};
@@ -143,8 +164,14 @@ public class GUI extends Application {
         if (player.hand.size() > 2)
             player.hand.get(2).Image.setOnMouseClicked(event -> {
                 shift(player, playingDeck, playerPane, deckPane, player.hand.indexOf(player.hand.get(2)));
+                if (finaldraw == true)
+                    EndState(playingDeck, player);
                 int index = computer.doTurn(playingDeck);
                 shift(computer, playingDeck, computerPane, deckPane, index);
+                if (finaldraw == true)
+                    EndState(playingDeck, computer);
+
+
                 DEBUG(player,computer);
                 System.out.print("\nDEBUG: DECK NUMBER OF CARDS: " + playingDeck.discardPile.size());
                 String[] suite = {"Spade", "Heart", "Diamond", "Club"};
@@ -154,12 +181,19 @@ public class GUI extends Application {
         if (player.hand.size() > 3)
             player.hand.get(3).Image.setOnMouseClicked(event -> {
                 shift(player, playingDeck, playerPane, deckPane, player.hand.size() - 1);
+                if (finaldraw == true)
+                    EndState(playingDeck, player);
                 int index = computer.doTurn(playingDeck);
                 shift(computer, playingDeck, computerPane, deckPane, index);
+                if (finaldraw == true)
+                    EndState(playingDeck, computer);
+
+
                 DEBUG(player,computer);
                 System.out.print("\nDEBUG: DECK NUMBER OF CARDS: " + playingDeck.discardPile.size());
                 String[] suite = {"Spade", "Heart", "Diamond", "Club"};
                 System.out.print("\nDEBUG: TOP CARD :\t" + suite[playingDeck.discardPile.get(0).suite] + " " +playingDeck.discardPile.get(0).value + ".");
+                System.out.print("\nDEBUG: DECK SIZE :\t" + playingDeck.drawPile.size());
             });
     }
 
@@ -236,14 +270,13 @@ public class GUI extends Application {
         // calculates score at end
         int size = player.captured.size();
 
+        System.out.print("YESSSS DADDY TRUMP-KUN: " + size);
+
         for(int i = 0; i < playingDeck.drawPile.size();i++)
             player.captured.add(playingDeck.drawPile.get(i));
 
         for(int i = 0; i < playingDeck.drawPile.size();i++)
             player.captured.add(playingDeck.discardPile.get(i));
-
-        for(int i = 0; i < playingDeck.drawPile.size();i++)
-            player.captured.add(player.hand.get(i));
 
                 while (size != 0) {
 
