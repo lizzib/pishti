@@ -58,11 +58,6 @@ public class GUI extends Application {
         GridPane pane = new GridPane();
         pane.setAlignment(Pos.CENTER);
 
-        // Text
-
-
-        //
-
         pane.add(computerPane, 0, 0);
         pane.add(deckPane, 0, 1);
         pane.add(playerPane, 0, 2);
@@ -112,6 +107,9 @@ public class GUI extends Application {
             player.redraw(playingDeck);
             cardBackImages(playerPane, player);
         }
+        captureMe(playingDeck, player);
+        playingDeck.discardPile.add(playingDeck.drawPile.get(0));
+        playingDeck.drawPile.remove(0);
     }
 
     public GridPane updateText(GridPane text, Player player, String user) {
@@ -129,34 +127,109 @@ public class GUI extends Application {
         if (player.hand.size() > 0)
             player.hand.get(0).Image.setOnMouseClicked(event -> {
                 shift(player, playingDeck, playerPane, deckPane, 0);
+                captureMe(playingDeck, player);
                 int index = computer.doTurn(playingDeck);
-                System.out.println(index);
                 shift(computer, playingDeck, computerPane, deckPane, index);
+                DEBUG(player,computer);
+                System.out.print("\nDEBUG: DECK NUMBER OF CARDS: " + playingDeck.discardPile.size());
             });
 
         if (player.hand.size() > 1)
             player.hand.get(1).Image.setOnMouseClicked(event -> {
                 shift(player, playingDeck, playerPane, deckPane, player.hand.indexOf(player.hand.get(1)));
+                captureMe(playingDeck, player);
                 int index = computer.doTurn(playingDeck);
-                System.out.println(index);
                 shift(computer, playingDeck, computerPane, deckPane, index);
+                DEBUG(player,computer);
+                System.out.print("\nDEBUG: DECK NUMBER OF CARDS: " + playingDeck.discardPile.size());
             });
 
         if (player.hand.size() > 2)
             player.hand.get(2).Image.setOnMouseClicked(event -> {
                 shift(player, playingDeck, playerPane, deckPane, player.hand.indexOf(player.hand.get(2)));
+                captureMe(playingDeck, player);
                 int index = computer.doTurn(playingDeck);
-                System.out.println(index);
                 shift(computer, playingDeck, computerPane, deckPane, index);
+                DEBUG(player,computer);
+                System.out.print("\nDEBUG: DECK NUMBER OF CARDS: " + playingDeck.discardPile.size());
             });
 
         if (player.hand.size() > 3)
             player.hand.get(3).Image.setOnMouseClicked(event -> {
                 shift(player, playingDeck, playerPane, deckPane, player.hand.size() - 1);
+                captureMe(playingDeck, player);
                 int index = computer.doTurn(playingDeck);
-                System.out.println(index);
                 shift(computer, playingDeck, computerPane, deckPane, index);
+                DEBUG(player,computer);
+                System.out.print("\nDEBUG: DECK NUMBER OF CARDS: " + playingDeck.discardPile.size());
             });
     }
-}
 
+        public void DEBUG(Player player, Computer computer) {
+            System.out.print("\n\n");
+            System.out.print("\nDEBUG: COMPUTER HAND: " + computer.hand.size());
+            System.out.print("\nDEBUG: COMPUTER CAPTURED: " + computer.captured.size());
+            System.out.print("\nDEBUG: COMPUTER SCORE: " + computer.score);
+            System.out.print("\nDEBUG: COMPUTER CAPTURED CARDS:\t");
+            for (int debuger = 0; debuger < computer.captured.size(); debuger++) {
+                String[] suite = {"Spade", "Heart", "Diamond", "Club"};
+                if (computer.captured.get(debuger).value != 0)
+                    System.out.print(suite[player.captured.get(debuger).suite] + " " + player.captured.get(debuger).value + ", ");
+                else
+                    System.out.print(suite[player.captured.get(debuger).suite] + " KING, ");
+            }
+            System.out.print("\nDEBUG: PLAYER HAND: " + player.hand.size());
+            System.out.print("\nDEBUG: PLAYER CAPTURED: " + player.score);
+            System.out.print("\nDEBUG: PLAYER SCORE: " + player.captured.size());
+            System.out.print("\nDEBUG: PLAYER CAPTURED CARDS:\t");
+            for (int debuger = 0; debuger < player.captured.size(); debuger++) {
+                String[] suite = {"Spade", "Heart", "Diamond", "Club"};
+                if (player.captured.get(debuger).value != 0)
+                    System.out.print(suite[player.captured.get(debuger).suite] + " " + player.captured.get(debuger).value + ", ");
+                else
+                    System.out.print(suite[player.captured.get(debuger).suite] + " KING, ");
+            }
+        }
+
+            public void captureMe(Deck playingDeck, Player player){
+                boolean Captured = (playingDeck.discardPile.get(0).value == playingDeck.discardPile.get(1).value || playingDeck.discardPile.get(0).value == 11);
+
+                //runs anytime a player puts down a card to see if captured
+                if (Captured) {
+                    System.out.println("\n***GOTCHA!!!***\n");
+                    //Checks for Pişti
+                    if (playingDeck.discardPile.size() == 2 && playingDeck.discardPile.get(0) == playingDeck.discardPile.get(1)) {
+                        player.score += 10;
+
+                        //Double Pişti
+                        if (playingDeck.discardPile.get(0).value == 11) {
+                            player.score += 10;
+                        }
+                    }
+
+                    while (playingDeck.discardPile.size() != 0) {
+
+                        //10's, J's, Q's, K's, A's.
+                        if (playingDeck.discardPile.get(0).value > 2 || playingDeck.discardPile.get(0).value <= 10) {
+                            player.score += 1;
+                        }
+
+                        //diamond 10
+                        if (playingDeck.discardPile.get(0).value == 10 && playingDeck.discardPile.get(0).suite == 2) {
+                            player.score += 2;
+                        }
+
+                        //2 of clubs
+                        if (playingDeck.discardPile.get(0).value == 2 && playingDeck.discardPile.get(0).suite == 3) {
+                            player.score += 2;
+                        }
+
+                        //removes cards from discard and adds them to the captured cards
+                        player.captured.add(0, playingDeck.discardPile.get(0));
+                        playingDeck.discardPile.remove(0);
+                    }
+                }
+
+                //Do End Turn
+            }
+    }
