@@ -8,10 +8,13 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import javafx.scene.paint.ImagePattern;
 
 import java.util.ArrayList;
 
@@ -20,130 +23,91 @@ import java.util.ArrayList;
 public class GUI extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception{
-        Pane pane2 = new Pane();
+        Deck playingDeck = new Deck();
+        GridPane computerPane = new GridPane();
+        computerPane.setAlignment(Pos.CENTER);
+        computerPane.setPadding(new Insets(11.5, 12.5, 13.5, 14.5));
+        computerPane.setHgap(5.5);
+        computerPane.setVgap(5.5);
+//        /*Computer's Hand*/
+        Computer computer = new Computer();
+        computer.redraw(playingDeck);
+        cardBackImages(computerPane, computer);
 
-        /*Computer's Hand*/
-        VBox vBox1 = new VBox();
-        HBox hBox1 = new HBox();
-        Label lbl1 = new Label("Computer");
-        lbl1.setFont(Font.font("Times New Roman", FontWeight.BOLD, 20));
-        lbl1.setPadding(new Insets(10,0,10,0));
-        cardBackImages(hBox1);
-        vBox1.setAlignment(Pos.CENTER);
-        vBox1.setPadding(new Insets(25,500,0,360));
-        vBox1.getChildren().addAll(lbl1,hBox1);
-        pane2.getChildren().add(vBox1);
+        GridPane playerPane = new GridPane();
+        playerPane.setAlignment(Pos.CENTER);
+        playerPane.setPadding(new Insets(11.5, 12.5, 13.5, 14.5));
+        playerPane.setHgap(5.5);
+        playerPane.setVgap(5.5);
+//        /*Player's Hand*/
+        Player player = new Player();
+        player.redraw(playingDeck);
+        cardBackImages(playerPane, player);
 
-        /*User's Hand*/
-        VBox vBox2 = new VBox();
-        HBox hBox2 = new HBox();
-        Label lbl2 = new Label("User");
-        lbl2.setFont(Font.font("Times New Roman", FontWeight.BOLD, 20));
-        lbl2.setPadding(new Insets(10,0,10,0));
-        cardBackImages(hBox2);// need to adjust image to show current cards
-        vBox2.setAlignment(Pos.BOTTOM_CENTER);
-        vBox2.setPadding(new Insets(700,500,0,360));
-        vBox2.getChildren().addAll(lbl2,hBox2);
-        pane2.getChildren().add(vBox2);
+//      /*Draw and Discard Pile*/
+        GridPane deckPane = new GridPane();
+        deckPane.setAlignment(Pos.CENTER);
+        deckPane.setPadding(new Insets(11.5, 12.5, 13.5, 14.5));
+        deckPane.setHgap(5.5);
+        deckPane.setVgap(5.5);
+        deckPane.add(playingDeck.drawPile.get(0).Back, 0, 0);
+        deckPane.add(playingDeck.discardPile.get(0).Image, 1, 0);
 
-        //User's Choices
-
-        Button btnUserChoice1 = new Button();
-        //btnUserChoice1.setGraphic();
-        btnUserChoice1.setOnAction(e -> {
-            System.exit(0);
+        player.hand.get(0).Image.setOnMouseClicked( event -> {
+           shift(player, playingDeck, playerPane, deckPane, 0);
         });
-        Button btUserChoice1 = new Button();
-        Button btUserChoice2 = new Button();
-        Button btUserChoice3 = new Button();
-        Button btUserChoice4 = new Button();
 
-
-        /* Deck Of Cards*/
-        VBox vBox3 = new VBox();
-        HBox hBox3 = new HBox();
-        Label lbl3 = new Label("Deck");
-        lbl3.setFont(Font.font("Times New Roman", FontWeight.BOLD, 20));
-        lbl3.setPadding(new Insets(10,0,10,0));
-        Image cardImages = new Image("image/card/b1fv.png");
-        hBox3.getChildren().add(new ImageView(cardImages));
-        vBox3.setAlignment(Pos.CENTER);
-        vBox3.getChildren().addAll(lbl3,hBox3);
-        vBox3.setPadding(new Insets(350,0,0,10));
-        pane2.getChildren().add(vBox3);
-
-        //Cards in Center
-
-
-        //Winner Display
-
-        /*Game Options*/
-        //End Game Button
-        HBox hBox4 = new HBox();
-        Button btnEndGame = new Button("End Game");
-        btnEndGame.setOnAction(e -> {
-            System.exit(0);
+        player.hand.get(1).Image.setOnMouseClicked( event -> {
+            shift(player, playingDeck, playerPane, deckPane, 1);
         });
-        hBox4.getChildren().addAll(btnEndGame);
-        hBox4.setLayoutX(900);
-        hBox4.setLayoutY(10);
 
+        player.hand.get(2).Image.setOnMouseClicked( event -> {
+            shift(player, playingDeck, playerPane, deckPane, 2);
+        });
 
-        //Deal Button
-        HBox hBox5 = new HBox();
-        Button btnDeal= new Button("Deal Cards");
-        btnDeal.setOnAction(e -> {
-            ;
-        });// Needs method to deal hand
+        player.hand.get(3).Image.setOnMouseClicked( event -> {
+            shift(player, playingDeck, playerPane, deckPane, 3);
+        });
 
-        hBox5.getChildren().addAll(btnDeal);
-        hBox5.setLayoutX(900);
-        hBox5.setLayoutY(50);
-        pane2.getChildren().addAll(hBox4,hBox5);
-
-
-
-        /*Scores*/
-        HBox hBox6 = new HBox();
-        Label lblScoresTitle =  new Label("Scores");
-        lbl3.setFont(Font.font("Times New Roman", FontWeight.BOLD, 15));
-        Text txtScores =  new Text();//Add Method for scores
-        hBox6.getChildren().addAll(lblScoresTitle);
-        hBox6.setLayoutX(850);
-        hBox6.setLayoutY(700);
-        pane2.getChildren().add(hBox6);
-
-
-
-
-
-
-
-
+        GridPane pane = new GridPane();
+        pane.setAlignment(Pos.CENTER);
+        pane.add(computerPane, 0,0);
+        pane.add(deckPane, 0,1);
+        pane.add(playerPane, 0,2);
         /*Stage|Scene For Card Game*/
-        BorderPane pane = new BorderPane();
-        pane.getChildren().addAll(pane2);
         Scene scene = new Scene(pane, 1000, 900);
+        ImagePattern pattern = new ImagePattern(new Image("file:src/Cards/table.jpg"));
+        scene.setFill(pattern);
         primaryStage.setTitle("Pishti");
         primaryStage.setScene(scene);
         primaryStage.show();
 
-
-
-
-
     }
 
     /*Card Images for Computer Hand*/
-    public static void cardBackImages(HBox hBox){
-        int count = 0;
-        while(count < 4){
-            Image cardImages = new Image("image/card/b1fv.png");
-            hBox.getChildren().add(new ImageView(cardImages));
-            count++;
+    public static void cardBackImages(GridPane pane, Player player){
+
+        if(player.getClass() == Computer.class) {
+            for (int i = 0; i < player.hand.size(); i++) {
+                pane.add(player.hand.get(i).Back, i, 0);
+            }
+        }
+        else{
+            for (int i = 0; i < player.hand.size(); i++) {
+                pane.add(player.hand.get(i).Image, i, 0);
+            }
         }
     }
-public static void main(String[] args){
+
+    public static void main(String[] args){
         Application.launch(args);
-}
+    }
+
+    public void shift(Player player, Deck playingDeck, GridPane playerPane, GridPane deckPane, int index){
+        playerPane.getChildren().remove(player.hand.get(index).Image);
+        playingDeck.discardPile.add(0,player.hand.get(index));
+        deckPane.add(playingDeck.discardPile.get(0).Image, 1, 0);
+        player.hand.remove(index);
+
+    }
 }
