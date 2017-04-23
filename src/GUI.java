@@ -120,11 +120,20 @@ public class GUI extends Application {
     public void shift(Player player, Deck playingDeck, GridPane playerPane, GridPane deckPane, int index){
         if(player.getClass() == Computer.class)
             playerPane.getChildren().remove(player.hand.get(index).Back);
+            if(player.hand.size() == 0) {
+                player.redraw(playingDeck);
+                cardBackImages(playerPane, player);
+            }
+
         else
             playerPane.getChildren().remove(player.hand.get(index).Image);
         playingDeck.discardPile.add(0,player.hand.get(index));
         deckPane.add(playingDeck.discardPile.get(0).Image, 1, 0);
         player.hand.remove(index);
+        if(player.hand.size() == 0) {
+            player.redraw(playingDeck);
+            cardBackImages(playerPane, player);
+        }
     }
 
 
