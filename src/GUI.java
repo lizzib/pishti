@@ -21,6 +21,7 @@ import java.util.ArrayList;
 //Kaleb Eads
 
 public class GUI extends Application {
+    int turn = 0;
     @Override
     public void start(Stage primaryStage) throws Exception{
         Deck playingDeck = new Deck();
@@ -39,13 +40,13 @@ public class GUI extends Application {
         playerPane.setPadding(new Insets(11.5, 12.5, 13.5, 14.5));
         playerPane.setHgap(5.5);
         playerPane.setVgap(5.5);
-//        /*Player's Hand*/
+//      /*Player's Hand*/
         Player player = new Player();
         player.redraw(playingDeck);
         cardBackImages(playerPane, player);
         Card secondCard = player.hand.get(1);
         Card thirdCard = player.hand.get(2);
-        //      /*Draw and Discard Pile*/
+//      /*Draw and Discard Pile*/
         GridPane deckPane = new GridPane();
         deckPane.setAlignment(Pos.CENTER);
         deckPane.setPadding(new Insets(11.5, 12.5, 13.5, 14.5));
@@ -53,29 +54,7 @@ public class GUI extends Application {
         deckPane.setVgap(5.5);
         deckPane.add(playingDeck.drawPile.get(0).Back, 0, 0);
         deckPane.add(playingDeck.discardPile.get(0).Image, 1, 0);
-
-        player.hand.get(0).Image.setOnMouseClicked( event -> {
-           shift(player, playingDeck, playerPane, deckPane, 0);
-        });
-
-        player.hand.get(1).Image.setOnMouseClicked( event -> {
-
-            shift(player, playingDeck, playerPane, deckPane, player.hand.indexOf(secondCard));
-
-        });
-
-        player.hand.get(2).Image.setOnMouseClicked( event -> {
-
-            shift(player, playingDeck, playerPane, deckPane, player.hand.indexOf(thirdCard));
-
-        });
-
-        player.hand.get(3).Image.setOnMouseClicked( event -> {
-            int count = 3;
-            shift(player, playingDeck, playerPane, deckPane, player.hand.size() - 1);
-            count--;
-        });
-
+//      /* Scene Creation*/
         GridPane pane = new GridPane();
         pane.setAlignment(Pos.CENTER);
         pane.add(computerPane, 0,0);
@@ -88,8 +67,36 @@ public class GUI extends Application {
         primaryStage.setTitle("Pishti");
         primaryStage.setScene(scene);
         primaryStage.show();
+                player.hand.get(0).Image.setOnMouseClicked(event -> {
+                    shift(player, playingDeck, playerPane, deckPane, 0);
+                    int index = computer.doTurn(playingDeck);
+                    System.out.println(index);
+                    shift(computer, playingDeck, computerPane, deckPane, index);
+                });
 
-    }
+                player.hand.get(1).Image.setOnMouseClicked(event -> {
+                    shift(player, playingDeck, playerPane, deckPane, player.hand.indexOf(secondCard));
+                    int index = computer.doTurn(playingDeck);
+                    System.out.println(index);
+                    shift(computer, playingDeck, computerPane, deckPane, index);
+                });
+
+                player.hand.get(2).Image.setOnMouseClicked(event -> {
+                    shift(player, playingDeck, playerPane, deckPane, player.hand.indexOf(thirdCard));
+                    int index = computer.doTurn(playingDeck);
+                    System.out.println(index);
+                    shift(computer, playingDeck, computerPane, deckPane, index);
+
+                });
+
+                player.hand.get(3).Image.setOnMouseClicked(event -> {
+                    shift(player, playingDeck, playerPane, deckPane, player.hand.size() - 1);
+                    int index = computer.doTurn(playingDeck);
+                    System.out.println(index);
+                    shift(computer, playingDeck, computerPane, deckPane, index);
+                });
+        }
+
 
     /*Card Images for Computer Hand*/
     public static void cardBackImages(GridPane pane, Player player){
@@ -111,10 +118,15 @@ public class GUI extends Application {
     }
 
     public void shift(Player player, Deck playingDeck, GridPane playerPane, GridPane deckPane, int index){
-        playerPane.getChildren().remove(player.hand.get(index).Image);
+        if(player.getClass() == Computer.class)
+            playerPane.getChildren().remove(player.hand.get(index).Back);
+        else
+            playerPane.getChildren().remove(player.hand.get(index).Image);
         playingDeck.discardPile.add(0,player.hand.get(index));
         deckPane.add(playingDeck.discardPile.get(0).Image, 1, 0);
         player.hand.remove(index);
-
     }
+
+
+
 }
