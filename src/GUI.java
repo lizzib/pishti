@@ -43,8 +43,9 @@ public class GUI extends Application {
         Player player = new Player();
         player.redraw(playingDeck);
         cardBackImages(playerPane, player);
-
-//      /*Draw and Discard Pile*/
+        Card secondCard = player.hand.get(1);
+        Card thirdCard = player.hand.get(2);
+        //      /*Draw and Discard Pile*/
         GridPane deckPane = new GridPane();
         deckPane.setAlignment(Pos.CENTER);
         deckPane.setPadding(new Insets(11.5, 12.5, 13.5, 14.5));
@@ -58,15 +59,21 @@ public class GUI extends Application {
         });
 
         player.hand.get(1).Image.setOnMouseClicked( event -> {
-            shift(player, playingDeck, playerPane, deckPane, 1);
+
+            shift(player, playingDeck, playerPane, deckPane, player.hand.indexOf(secondCard));
+
         });
 
         player.hand.get(2).Image.setOnMouseClicked( event -> {
-            shift(player, playingDeck, playerPane, deckPane, 2);
+
+            shift(player, playingDeck, playerPane, deckPane, player.hand.indexOf(thirdCard));
+
         });
 
         player.hand.get(3).Image.setOnMouseClicked( event -> {
-            shift(player, playingDeck, playerPane, deckPane, 3);
+            int count = 3;
+            shift(player, playingDeck, playerPane, deckPane, player.hand.size() - 1);
+            count--;
         });
 
         GridPane pane = new GridPane();
