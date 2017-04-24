@@ -10,6 +10,9 @@ import javafx.scene.text.Font;
 import javafx.scene.control.Label;
 
 //Kaleb Eads
+//Elizabeth Burnside
+//Lilith Rothwell
+
 
 public class GUI extends Application {
     @Override
