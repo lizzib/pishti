@@ -58,7 +58,9 @@ public class GUI extends Application {
         primaryStage.show();
         pane.setOnMouseClicked(event -> {
             updateButtons(player, computer, playingDeck, playerPane, computerPane, deckPane);
-            if(playingDeck.drawPile.size() < 7 && player.hand.size() == 0 && computer.hand.size() == 0)
+            if(playingDeck.drawPile.size() == 8 && player.hand.size() == 0 && computer.hand.size() == 0)
+                redraw(player, computer, playingDeck, playerPane,computerPane);
+            if(playingDeck.drawPile.size() < 8 && player.hand.size() == 0 && computer.hand.size() == 0)
                 endGame(player, computer, playingDeck, playerPane, computerPane, deckPane, pane);
         });
     }
@@ -66,10 +68,13 @@ public class GUI extends Application {
     public static void cardBackImages(GridPane pane, Player player) {
 
         if (player.getClass() == Computer.class) {
+            pane.getChildren().removeAll();
             for (int i = 0; i < player.hand.size(); i++) {
                 pane.add(player.hand.get(i).Back, i, 0);
             }
-        } else {
+        }
+        else {
+            pane.getChildren().removeAll();
             for (int i = 0; i < player.hand.size(); i++) {
                 pane.add(player.hand.get(i).Image, i, 0);
             }
@@ -111,6 +116,9 @@ public class GUI extends Application {
                 if (computer.hand.size() == 0 && player.hand.size() == 0 && playingDeck.drawPile.size()/8 > 0) {
                     redraw(player, computer, playingDeck, playerPane, computerPane);
                 }
+                else if (playingDeck.drawPile.size()/8 == 0 && computer.hand.size() == 0 && player.hand.size() == 0)
+                    System.out.println();
+
             });
 
         if (player.hand.size() > 1)
@@ -121,6 +129,9 @@ public class GUI extends Application {
                 if (computer.hand.size() == 0 && player.hand.size() == 0 && playingDeck.drawPile.size()/8 > 0) {
                     redraw(player, computer, playingDeck, playerPane, computerPane);
                 }
+                else if (playingDeck.drawPile.size()/8 == 0 && computer.hand.size() == 0 && player.hand.size() == 0)
+                    System.out.println("");
+
             });
 
         if (player.hand.size() > 2)
@@ -131,6 +142,9 @@ public class GUI extends Application {
                 if (computer.hand.size() == 0 && player.hand.size() == 0 && playingDeck.drawPile.size()/8 > 0) {
                     redraw(player, computer, playingDeck, playerPane, computerPane);
                 }
+                else if (playingDeck.drawPile.size()/8 == 0 && computer.hand.size() == 0 && player.hand.size() == 0)
+                    System.out.println("");//do win
+
             });
 
         if (player.hand.size() > 3)
@@ -141,34 +155,36 @@ public class GUI extends Application {
                 if (computer.hand.size() == 0 && player.hand.size() == 0 && playingDeck.drawPile.size()/8 > 0) {
                     redraw(player, computer, playingDeck, playerPane, computerPane);
                 }
+                else if (playingDeck.drawPile.size()/8 == 0 && computer.hand.size() == 0 && player.hand.size() == 0)
+                    System.out.println("");//do win
             });
     }
 
-//    public void DEBUG(Player player, Computer computer) {
-//        System.out.print("\n\n");
-//        System.out.print("\nDEBUG: COMPUTER HAND: " + computer.hand.size());
-//        System.out.print("\nDEBUG: COMPUTER CAPTURED: " + computer.captured.size());
-//        System.out.print("\nDEBUG: COMPUTER SCORE: " + computer.score);
-//        System.out.print("\nDEBUG: COMPUTER CAPTURED CARDS:\t");
-//        for (int debuger = 0; debuger < computer.captured.size(); debuger++) {
-//            String[] suite = {"Spade", "Heart", "Diamond", "Club"};
-//            if (computer.captured.get(debuger).value != 0)
-//                System.out.print(suite[computer.captured.get(debuger).suite] + " " + computer.captured.get(debuger).value + ", ");
-//            else
-//                System.out.print(suite[computer.captured.get(debuger).suite] + " KING, ");
-//        }
-//        System.out.print("\nDEBUG: PLAYER HAND: " + player.hand.size());
-//        System.out.print("\nDEBUG: PLAYER CAPTURED: " + player.score);
-//        System.out.print("\nDEBUG: PLAYER SCORE: " + player.captured.size());
-//        System.out.print("\nDEBUG: PLAYER CAPTURED CARDS:\t");
-//        for (int debuger = 0; debuger < player.captured.size(); debuger++) {
-//            String[] suite = {"Spade", "Heart", "Diamond", "Club"};
-//            if (player.captured.get(debuger).value != 0)
-//                System.out.print(suite[player.captured.get(debuger).suite] + " " + player.captured.get(debuger).value + ", ");
-//            else
-//                System.out.print(suite[player.captured.get(debuger).suite] + " KING, ");
-//        }
-//    }
+    public void DEBUG(Player player, Computer computer) {
+        System.out.print("\n\n");
+        System.out.print("\nDEBUG: COMPUTER HAND: " + computer.hand.size());
+        System.out.print("\nDEBUG: COMPUTER CAPTURED: " + computer.captured.size());
+        System.out.print("\nDEBUG: COMPUTER SCORE: " + computer.score);
+        System.out.print("\nDEBUG: COMPUTER CAPTURED CARDS:\t");
+        for (int debuger = 0; debuger < computer.captured.size(); debuger++) {
+            String[] suite = {"Spade", "Heart", "Diamond", "Club"};
+            if (computer.captured.get(debuger).value != 0)
+                System.out.print(suite[computer.captured.get(debuger).suite] + " " + computer.captured.get(debuger).value + ", ");
+            else
+                System.out.print(suite[computer.captured.get(debuger).suite] + " KING, ");
+        }
+        System.out.print("\nDEBUG: PLAYER HAND: " + player.hand.size());
+        System.out.print("\nDEBUG: PLAYER CAPTURED: " + player.score);
+        System.out.print("\nDEBUG: PLAYER SCORE: " + player.captured.size());
+        System.out.print("\nDEBUG: PLAYER CAPTURED CARDS:\t");
+        for (int debuger = 0; debuger < player.captured.size(); debuger++) {
+            String[] suite = {"Spade", "Heart", "Diamond", "Club"};
+            if (player.captured.get(debuger).value != 0)
+                System.out.print(suite[player.captured.get(debuger).suite] + " " + player.captured.get(debuger).value + ", ");
+            else
+                System.out.print(suite[player.captured.get(debuger).suite] + " KING, ");
+        }
+    }
 
     public void captureMe(Deck playingDeck, Player player){
         //runs anytime a player puts down a card to see if captured
@@ -211,14 +227,8 @@ public class GUI extends Application {
     }
 
     public void redraw(Player player, Computer computer, Deck playingDeck, GridPane playerpane,GridPane computerPane){
-//        while (computer.hand.size() != 4) {
         computer.redraw(playingDeck);
-//            System.out.print("This is not a dance");
-//        }
-//        while (player.hand.size() != 4) {
         player.redraw(playingDeck);
-//            System.out.print("Let me out!");
-//        }
         cardBackImages(playerpane, player);
         cardBackImages(computerPane, computer);
     }
@@ -266,6 +276,8 @@ public class GUI extends Application {
             winner.setText("Winner: Player" + "\nPlayer Score: " + player.score
                     + "\nComputer Score: " + computer.score);}
         pane.getChildren().add(winner);
+        for(int i = 0; i < 10; i++){
+        playingDeck.drawPile.add(new Card(1));}
 
     }
 
