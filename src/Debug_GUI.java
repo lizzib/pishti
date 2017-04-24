@@ -105,6 +105,7 @@ public class GUI extends Application {
         if(playingDeck.discardPile.size() == 0 && playingDeck.drawPile.size() > 1) {
             playingDeck.discardPile.add(playingDeck.drawPile.get(0));
             playingDeck.drawPile.remove(0);
+            deckPane.add(playingDeck.drawPile.get(0).Back, 0, 0);
         }
         if(playingDeck.discardPile.size() > 0)
             deckPane.add(playingDeck.discardPile.get(0).Image, 1, 0);
