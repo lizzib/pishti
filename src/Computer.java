@@ -1,18 +1,18 @@
 //Lilith Wroth 4/22/2017
 
 public class Computer extends Player {
-    public Card cpuCard;
 
     //check if capture possible
-    //Advanced Ai Algorithm
+    //Table
     public int doTurn(Deck playingDeck) {
         for (int x = 0; x < hand.size(); x++)//Analizes what is in hand
         {
-            if (playingDeck.discardPile.get(0).value == hand.get(x).value && playingDeck.discardPile.size() == 2) {
-                return x;
+            //Tries to match cards ignoring jacks to get the most out of them
+            if(playingDeck.discardPile.size() == 0 && playingDeck.drawPile.size() > 1) {
+                playingDeck.discardPile.add(playingDeck.drawPile.get(0));
+                playingDeck.drawPile.remove(0);
             }
 
-            //Tries to match cards ignoring jacks to get the most out of them
             if (playingDeck.discardPile.get(0).value == hand.get(x).value && hand.get(x).value != 11) {
                 return x;
             }
