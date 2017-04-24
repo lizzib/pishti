@@ -58,7 +58,9 @@ public class GUI extends Application {
         primaryStage.show();
         pane.setOnMouseClicked(event -> {
             updateButtons(player, computer, playingDeck, playerPane, computerPane, deckPane);
-            if(playingDeck.drawPile.size() < 7 && player.hand.size() == 0 && computer.hand.size() == 0)
+            if(playingDeck.drawPile.size() == 8 && player.hand.size() == 0 && computer.hand.size() == 0)
+                redraw(player, computer, playingDeck, playerPane,computerPane);
+            if(playingDeck.drawPile.size() < 8 && player.hand.size() == 0 && computer.hand.size() == 0)
                 endGame(player, computer, playingDeck, playerPane, computerPane, deckPane, pane);
         });
     }
@@ -66,10 +68,13 @@ public class GUI extends Application {
     public static void cardBackImages(GridPane pane, Player player) {
 
         if (player.getClass() == Computer.class) {
+            pane.getChildren().removeAll();
             for (int i = 0; i < player.hand.size(); i++) {
                 pane.add(player.hand.get(i).Back, i, 0);
             }
-        } else {
+        }
+        else {
+            pane.getChildren().removeAll();
             for (int i = 0; i < player.hand.size(); i++) {
                 pane.add(player.hand.get(i).Image, i, 0);
             }
@@ -99,7 +104,7 @@ public class GUI extends Application {
             playingDeck.drawPile.remove(0);
         }
         if(playingDeck.discardPile.size() > 0)
-        deckPane.add(playingDeck.discardPile.get(0).Image, 1, 0);
+            deckPane.add(playingDeck.discardPile.get(0).Image, 1, 0);
     }
 
     public void updateButtons(Player player, Computer computer, Deck playingDeck, GridPane playerPane, GridPane computerPane, GridPane deckPane) {
@@ -108,19 +113,12 @@ public class GUI extends Application {
                 shift(player, playingDeck, playerPane, deckPane, 0);
                 int index = computer.doTurn(playingDeck);
                 shift(computer, playingDeck, computerPane, deckPane, index);
-                System.out.println("*\n***\t"+ playingDeck.drawPile.size()/8 +"\t***\n*");
                 if (computer.hand.size() == 0 && player.hand.size() == 0 && playingDeck.drawPile.size()/8 > 0) {
                     redraw(player, computer, playingDeck, playerPane, computerPane);
-                    System.out.print("\nDEBUG: REDRAW!!");
                 }
                 else if (playingDeck.drawPile.size()/8 == 0 && computer.hand.size() == 0 && player.hand.size() == 0)
-                    System.out.println("A WINNER IS YOU MY BOY*************");//do win
+                    System.out.println();
 
-                DEBUG(player,computer);
-                System.out.print("\nDEBUG: DECK NUMBER OF CARDS: " + playingDeck.discardPile.size());
-                String[] suite = {"Spade", "Heart", "Diamond", "Club"};
-                System.out.print("\nDEBUG: DECK SIZE :\t" + playingDeck.drawPile.size());
-                System.out.print("\nDEBUG: DECK SIZE / 8 :\t" + playingDeck.drawPile.size()/8);
             });
 
         if (player.hand.size() > 1)
@@ -128,19 +126,12 @@ public class GUI extends Application {
                 shift(player, playingDeck, playerPane, deckPane, player.hand.indexOf(player.hand.get(1)));
                 int index = computer.doTurn(playingDeck);
                 shift(computer, playingDeck, computerPane, deckPane, index);
-                System.out.println("*\n***\t"+ playingDeck.drawPile.size()/8 +"\t***\n*");
                 if (computer.hand.size() == 0 && player.hand.size() == 0 && playingDeck.drawPile.size()/8 > 0) {
                     redraw(player, computer, playingDeck, playerPane, computerPane);
-                    System.out.print("\nDEBUG: REDRAW!!");
                 }
                 else if (playingDeck.drawPile.size()/8 == 0 && computer.hand.size() == 0 && player.hand.size() == 0)
-                    System.out.println("A WINNER IS YOU MY BOY*************");//do win
+                    System.out.println("");
 
-                DEBUG(player,computer);
-                System.out.print("\nDEBUG: DECK NUMBER OF CARDS: " + playingDeck.discardPile.size());
-                String[] suite = {"Spade", "Heart", "Diamond", "Club"};
-                System.out.print("\nDEBUG: TOP CARD :\t" + suite[playingDeck.discardPile.get(0).suite] + " " +playingDeck.discardPile.get(0).value + ".");
-                System.out.print("\nDEBUG: DECK SIZE :\t" + playingDeck.drawPile.size());
             });
 
         if (player.hand.size() > 2)
@@ -148,19 +139,12 @@ public class GUI extends Application {
                 shift(player, playingDeck, playerPane, deckPane, player.hand.indexOf(player.hand.get(2)));
                 int index = computer.doTurn(playingDeck);
                 shift(computer, playingDeck, computerPane, deckPane, index);
-                System.out.println("*\n***\t"+ playingDeck.drawPile.size()/8 +"\t***\n*");
                 if (computer.hand.size() == 0 && player.hand.size() == 0 && playingDeck.drawPile.size()/8 > 0) {
                     redraw(player, computer, playingDeck, playerPane, computerPane);
-                    System.out.print("\nDEBUG: REDRAW!!");
                 }
                 else if (playingDeck.drawPile.size()/8 == 0 && computer.hand.size() == 0 && player.hand.size() == 0)
-                    System.out.println("A WINNER IS YOU MY BOY*************");//do win
+                    System.out.println("");//do win
 
-                DEBUG(player,computer);
-                System.out.print("\nDEBUG: DECK NUMBER OF CARDS: " + playingDeck.discardPile.size());
-                String[] suite = {"Spade", "Heart", "Diamond", "Club"};
-                System.out.print("\nDEBUG: TOP CARD :\t" + suite[playingDeck.discardPile.get(0).suite] + " " +playingDeck.discardPile.get(0).value + ".");
-                System.out.print("\nDEBUG: DECK SIZE :\t" + playingDeck.drawPile.size());
             });
 
         if (player.hand.size() > 3)
@@ -168,19 +152,11 @@ public class GUI extends Application {
                 shift(player, playingDeck, playerPane, deckPane, player.hand.size() - 1);
                 int index = computer.doTurn(playingDeck);
                 shift(computer, playingDeck, computerPane, deckPane, index);
-                System.out.println("*\n***\t"+ playingDeck.drawPile.size()/8 +"\t***\n*");
                 if (computer.hand.size() == 0 && player.hand.size() == 0 && playingDeck.drawPile.size()/8 > 0) {
                     redraw(player, computer, playingDeck, playerPane, computerPane);
-                    System.out.print("\nDEBUG: REDRAW!!");
                 }
                 else if (playingDeck.drawPile.size()/8 == 0 && computer.hand.size() == 0 && player.hand.size() == 0)
-                    System.out.println("A WINNER IS YOU MY BOY*************");//do win
-
-                DEBUG(player,computer);
-                System.out.print("\nDEBUG: DECK NUMBER OF CARDS: " + playingDeck.discardPile.size());
-                String[] suite = {"Spade", "Heart", "Diamond", "Club"};
-                System.out.print("\nDEBUG: TOP CARD :\t" + suite[playingDeck.discardPile.get(0).suite] + " " +playingDeck.discardPile.get(0).value + ".");
-                System.out.print("\nDEBUG: DECK SIZE :\t" + playingDeck.drawPile.size());
+                    System.out.println("");//do win
             });
     }
 
@@ -214,16 +190,13 @@ public class GUI extends Application {
         //runs anytime a player puts down a card to see if captured
         if(playingDeck.discardPile.size() > 1) {
             if (playingDeck.discardPile.get(0).value == playingDeck.discardPile.get(1).value || playingDeck.discardPile.get(0).value == 11) {
-                System.out.println("\n***GOTCHA!!!***\nDEBUG: " + playingDeck.discardPile.size() + "\nDEBUG: " + (playingDeck.discardPile.get(0) == playingDeck.discardPile.get(1)));
                 //Checks for Pişti
                 if (playingDeck.discardPile.size() == 2 && playingDeck.discardPile.get(0).value == playingDeck.discardPile.get(1).value) {
                     player.score += 10;
-                    System.out.print("BAD GAME");
 
                     //Double Pişti
                     if (playingDeck.discardPile.get(0).value == 11) {
                         player.score += 10;
-                        System.out.print("BAD GAMEx2");
                     }
                 }
 
@@ -254,14 +227,8 @@ public class GUI extends Application {
     }
 
     public void redraw(Player player, Computer computer, Deck playingDeck, GridPane playerpane,GridPane computerPane){
-//        while (computer.hand.size() != 4) {
-            computer.redraw(playingDeck);
-//            System.out.print("This is not a dance");
-//        }
-//        while (player.hand.size() != 4) {
-            player.redraw(playingDeck);
-//            System.out.print("Let me out!");
-//        }
+        computer.redraw(playingDeck);
+        player.redraw(playingDeck);
         cardBackImages(playerpane, player);
         cardBackImages(computerPane, computer);
     }
@@ -309,6 +276,8 @@ public class GUI extends Application {
             winner.setText("Winner: Player" + "\nPlayer Score: " + player.score
                     + "\nComputer Score: " + computer.score);}
         pane.getChildren().add(winner);
+        for(int i = 0; i < 10; i++){
+        playingDeck.drawPile.add(new Card(1));}
 
     }
 
