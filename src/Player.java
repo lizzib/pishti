@@ -15,11 +15,8 @@ public class Player {
     }
 
     public void redraw(Deck playingDeck){
-        if(playingDeck.drawPile.size() > 10)
-        {
             for(int i = 0; i < 4; i++)
                 playingDeck.draw(this);
         }
 
     }
-}
